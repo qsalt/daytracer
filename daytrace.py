@@ -64,8 +64,6 @@ class daytrace:
 #        print(time_card)
 #        print(time_card['201506281138']['duration'])
         for key, value in time_card.iteritems():
-                if value['day']
-            print(value['duration'])
             time_total = time_total + value['duration']
 
         return time_total
