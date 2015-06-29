@@ -9,7 +9,7 @@ class daytrace:
         self.date_time = datetime.datetime.today()
 ################################################################################
 ################################################################################
-    def create_entry(self, category, message, duration, output=None, year=None, month=None, day=None, hour=None, minute=None):
+    def create_entry(self, category, message, duration, ticket=None, output=None, year=None, month=None, day=None, hour=None, minute=None):
         if year is None:
             year = int(self.date_time.strftime('%Y'))
         if month is None:
@@ -28,17 +28,18 @@ class daytrace:
         time_entry[self.entry_key]['category'] = category
         time_entry[self.entry_key]['message'] = message
         time_entry[self.entry_key]['duration'] = duration
+        time_entry[self.entry_key]['ticket'] = ticket
         time_entry[self.entry_key]['year'] = year
         time_entry[self.entry_key]['month'] = month
         time_entry[self.entry_key]['day'] = day
         time_entry[self.entry_key]['hour'] = hour
         time_entry[self.entry_key]['minute'] = minute
-        entry_json = json.dumps(time_entry, sort_keys=True, indent=4)
+        #entry_json = json.dumps(time_entry, sort_keys=True, indent=4)
 
         return time_entry
 ################################################################################
 ################################################################################
-    def log_entry(self, entry_json, json_path=None):
+    def log_entry(self, entry_dict, json_path=None):
         if json_path is None:
             json_path="./my_time.json"
 
@@ -47,13 +48,13 @@ class daytrace:
             time_card = json.load(jfile)
 
         #Updates the python dictionary and appends the entry to the dictionary. Converts the dictionary back to json and overwrites the existing file.
-        time_card.update(entry_json)
+        time_card.update(entry_dict)
         with open(json_path, 'w') as jfile:
             json.dump(time_card, jfile, sort_keys=True, indent=4)
         return True
 ################################################################################
 ################################################################################
-    def time_total(self, begin, end, json_path=None):
+    def time_total(self, json_path=None):
         if json_path is None:
             json_path = './my_time.json'
 
