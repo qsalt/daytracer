@@ -23,7 +23,7 @@ class daytrace:
         duration = float(duration)
 
         # Creating the entry_key variable just to make naming the dictionary keys easier. Also appended dentries to the dictionary opposed to declaring them all at once for readability purposes.
-        self.entry_key = self.date_time.strftime('%Y%m%d%M%S')
+        self.entry_key = self.date_time.strftime('%Y%m%d%H%M%S')
         time_entry = { self.entry_key: {}}
         time_entry[self.entry_key]['category'] = category
         time_entry[self.entry_key]['message'] = message
