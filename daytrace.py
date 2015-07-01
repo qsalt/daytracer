@@ -54,7 +54,7 @@ class daytrace:
         return True
 ################################################################################
 ################################################################################
-    def time_total(self, json_path=None):
+    def time_total(self, json_path=None, day=None, category=None, ticket=None):
         if json_path is None:
             json_path = './my_time.json'
 
@@ -69,7 +69,49 @@ class daytrace:
 
         return time_total
 ################################################################################
+################################################################################
+    def search(self, json_path=None, category=None, ticket=None, day=None):
+        if json_path is None:
+            json_path = './mytime.json'
 
+        with open(json_path, 'r') as jfile:
+            time_card = json.load(jfile)
+        
+        def filter(item, item_category):
+            filter_items = {}
+            if item is not None:
+                for key, value in time_card.iteritems():
+                    if value[item_category] is None:
+                        continue
+                    elif type(value[item_category]) is int:
+                        if int(item) is int(value[item_category]):
+                            filter_items[key] = value
+                    elif item.lower() in value[item_category].lower():
+                        filter_items[key] = value
+                        #print(filter_items)
+                return filter_items
+            return None
+
+        if category is not None:
+            results = filter(category, 'category')
+        elif ticket is not None:
+            results = filter(ticket, 'ticket')
+        elif day is not None:
+            results = filter(day, 'day')
+        else:
+            results = time_card
+
+        return results
+#        self.tally(results)
+################################################################################
+################################################################################
+    def tally(self, time_dictionary):
+        time_total = 0
+        for key, value in time_dictionary.iteritems():
+            time_total = time_total + value['duration']
+
+        return time_total
+################################################################################
 
 ###############
 ### Methods ###

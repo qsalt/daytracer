@@ -12,7 +12,12 @@ def tcreate(args):
     print(punch_timecard)
     
 def ttotal(args):
-    print(daytracer.time_total(output_file))
+    print(daytracer.time_total(args.timecard_file))
+
+def tsearch(args):
+    sresults = daytracer.search(args.timecard_file, args.category, args.ticket, args.day)
+    print(sresults)
+    print(daytracer.tally(sresults))
 
 parser = argparse.ArgumentParser(description='enters and queries time entries.')
 subparsers = parser.add_subparsers()
@@ -27,6 +32,13 @@ parser_create.set_defaults(func=tcreate)
 parser_total = subparsers.add_parser("total")
 parser_total.add_argument("timecard_file", nargs='?', help="Path to the timecard json file.", default=output_file)
 parser_total.set_defaults(func=ttotal)
+
+parser_total = subparsers.add_parser("search")
+parser_total.add_argument("timecard_file", nargs='?', help="Path to the timecard json file.", default=output_file)
+parser_total.add_argument("-c", "--category", nargs='?', help="Show entries with the following category", default=None)
+parser_total.add_argument("-t", "--ticket", nargs='?', help="Show entries related to a ticket.", default=None)
+parser_total.add_argument("-d", "--day", nargs='?', help="Show entries for a given day.", default=None)
+parser_total.set_defaults(func=tsearch)
 
 args = parser.parse_args()
 args.func(args)
