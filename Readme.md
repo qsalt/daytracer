@@ -2,7 +2,15 @@
 
 Library to take time entry data and output it as json to a file. It should handle accepting the, duration, note/message/descriptoion, category, and ticket.
 
+## ToDo:
+* Provide a means to edit logged issues beyond vim.
+* Provide alternate output for searches.
+* Link into jira's API for work log entries.
+
+### Example
+```
 daytrace create "awesome category" "I made great progress on that awesome project." 2.5 "issue-awesome123"
+```
 
 ### Arguments & Sub Args:
 * create: Used to create time entries.
