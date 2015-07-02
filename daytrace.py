@@ -54,7 +54,7 @@ class daytrace:
         return True
 ################################################################################
 ################################################################################
-    def time_total(self, json_path=None, day=None, category=None, ticket=None):
+    def time_total(self, json_path=None):
         if json_path is None:
             json_path = './my_time.json'
 
@@ -90,15 +90,15 @@ class daytrace:
                         filter_items[key] = value
                         #print(filter_items)
                 return filter_items
-            return None
+#            return None
 
         if category is not None:
             results = filter(category, 'category')
-        elif ticket is not None:
+        if ticket is not None:
             results = filter(ticket, 'ticket')
-        elif day is not None:
+        if day is not None:
             results = filter(day, 'day')
-        else:
+        if category is None and ticket is None and day is None:
             results = time_card
 
         return results
@@ -112,7 +112,14 @@ class daytrace:
 
         return time_total
 ################################################################################
-
+################################################################################
+    def formatted(self, time_dictionary):
+        formatted_list = []
+        for key, value in time_dictionary.iteritems():
+            formatted_entry = '%s-%s-%s, %s:%s, %s hour(s), CATEGORY: "%s" MESSAGE: "%s" TICKET: "%s"' % (value['year'], value['month'], value['day'], value['hour'], value['minute'], value['duration'], value['category'], value['message'], value['ticket'])
+            formatted_list.append(formatted_entry)
+        return formatted_list
+    
 ###############
 ### Methods ###
 ###############
