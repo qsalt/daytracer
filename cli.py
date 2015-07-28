@@ -4,10 +4,12 @@ import daytrace
 
 #This variable is temporary, a config file will replace these at a later date.
 output_file = "/home/eandrews/Notes/general/mytime.json"
+categories_file = "/home/eandrews/Projects/daytracer/categories.txt"
 daytracer = daytrace.daytrace()
 
 def tcreate(args):
-    enter_time = daytracer.create_entry(args.category, args.message, args.duration, args.ticket)
+    match_category = daytracer.fuzzy_match(args.category, categories_file)
+    enter_time = daytracer.create_entry(match_category, args.message, args.duration, args.ticket)
     punch_timecard = daytracer.log_entry(enter_time, output_file)
     print(punch_timecard)
     

@@ -1,5 +1,7 @@
 import datetime
 import json
+import difflib
+import sys
 #from datetime import datetime
 
 class daytrace:
@@ -116,9 +118,28 @@ class daytrace:
     def formatted(self, time_dictionary):
         formatted_list = []
         for key, value in time_dictionary.iteritems():
-            formatted_entry = '%s-%s-%s, %s:%s, %s hour(s), CATEGORY: "%s" MESSAGE: "%s" TICKET: "%s"' % (value['year'], value['month'], value['day'], value['hour'], value['minute'], value['duration'], value['category'], value['message'], value['ticket'])
+            formatted_entry = '%s-%s, %s hour(s), CATEGORY: "%s" MESSAGE: "%s" TICKET: "%s"' % (value['month'], value['day'], value['duration'], value['category'], value['message'], value['ticket'])
             formatted_list.append(formatted_entry)
         return formatted_list
+################################################################################
+################################################################################
+    def fuzzy_match(self, item_str, category_list):
+        #Open the categories file
+        with open(category_list, 'r') as cfile:
+            work_categories = []
+            #Build an array from the categories in the file
+            for line in cfile:
+                work_categories.append(line.rstrip('\n'))
+                #print(work_categories)
+            fuzzy_match = difflib.get_close_matches(item_str, work_categories, 1, 0.8) 
+            #This sees if the array is empty from the fuzzy match. If it is then no matches were found and the program exits
+            if not fuzzy_match:
+                print('No match, try again')
+                sys.exit(1)
+            #print(fuzzy_match)
+            #return the matching category
+            return fuzzy_match[0]
+        #Compares the item_str to items in the category_list to see which is the closest match. It returns the closest match.
     
 ###############
 ### Methods ###
