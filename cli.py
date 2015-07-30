@@ -36,7 +36,7 @@ def config_fetch(config_path):
     config = ConfigParser.RawConfigParser()
     if not os.path.isfile(config_path):
         config.add_section('DayTracer')
-        config.set('DayTracer', 'timecard_location', 'mytime.json')
+        config.set('DayTracer', 'timecard_location', "%s/mytime.json" % (os.path.dirname(os.path.realpath(__file__))))
         config.add_section('Categories')
         config.set('Categories', 'admin', 'url/action')
         config.set('Categories', 'development', 'url/action')
@@ -50,8 +50,9 @@ def config_fetch(config_path):
     return config
 
 #Reads the config and assigns it to the output_file variable to determine where the timecard is to be placed.
-config = config_fetch('config.cfg')
-config.read('config.cfg')
+config_file = "%s/config.cfg" % (os.path.dirname(os.path.realpath(__file__)))
+config = config_fetch(config_file)
+config.read(config_file)
 output_file = config.get('DayTracer', 'timecard_location')
 
 
