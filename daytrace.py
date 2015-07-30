@@ -124,22 +124,16 @@ class daytrace:
 ################################################################################
 ################################################################################
     def fuzzy_match(self, item_str, category_list):
-        #Open the categories file
-        with open(category_list, 'r') as cfile:
-            work_categories = []
-            #Build an array from the categories in the file
-            for line in cfile:
-                work_categories.append(line.rstrip('\n'))
-                #print(work_categories)
-            fuzzy_match = difflib.get_close_matches(item_str, work_categories, 1, 0.8) 
-            #This sees if the array is empty from the fuzzy match. If it is then no matches were found and the program exits
-            if not fuzzy_match:
-                print('No match, try again')
-                sys.exit(1)
-            #print(fuzzy_match)
-            #return the matching category
-            return fuzzy_match[0]
-        #Compares the item_str to items in the category_list to see which is the closest match. It returns the closest match.
+        #Category list is an array of values
+        fuzzy_match = difflib.get_close_matches(item_str, category_list, 1, 0.7) 
+        #This sees if the array is empty from the fuzzy match. If it is then no matches were found and the program exits
+        if not fuzzy_match:
+            print('No category match, try again')
+            sys.exit(1)
+        #print(fuzzy_match)
+        #return the matching category
+        return fuzzy_match[0]
+         #Compares the item_str to items in the category_list to see which is the closest match. It returns the closest match.
     
 ###############
 ### Methods ###
