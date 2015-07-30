@@ -7,7 +7,7 @@ Library to take time entry data and output it as json to a file. It should handl
 * Provide alternate output for searches.
 * Link into jira's API for work log entries.
 
-### Example
+### Usage Example
 ```
 daytrace create "awesome category" "I made great progress on that awesome project." 2.5 "issue-awesome123"
 ```
@@ -29,7 +29,20 @@ daytrace create "awesome category" "I made great progress on that awesome projec
 
 ### Config file
 This script looks for a config.cfg file in the directory of the git repo. If it does not exist, a default config file is generated. This config is used to set where your mytime.json file will be saved, and what categories you want to track your time in.
-Sample json output:
+
+Sample config:
+
+```
+[DayTracer]
+timecard_location = mytime.json
+
+[Categories]
+admin = url/action
+development = url/action
+operations = url/action
+```
+
+### Sample Output:
 
 ```
 {
