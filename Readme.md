@@ -27,6 +27,8 @@ daytrace create "awesome category" "I made great progress on that awesome projec
     * Single & Bulk edit: find one or multiple issues and edit a given key value pair.
     * Edit last: If no filter is provided edit key value pairs of latlest entry.
 
+### Config file
+This script looks for a config.cfg file in the directory of the git repo. If it does not exist, a default config file is generated. This config is used to set where your mytime.json file will be saved, and what categories you want to track your time in.
 Sample json output:
 
 ```
