@@ -11,7 +11,7 @@ class daytrace:
         self.date_time = datetime.datetime.today()
 ################################################################################
 ################################################################################
-    def create_entry(self, category, message, duration, ticket=None, output=None, year=None, month=None, day=None, hour=None, minute=None):
+    def create_entry(self, category, message, duration, ticket=None, year=None, month=None, day=None, hour=None, minute=None):
         if year is None:
             year = int(self.date_time.strftime('%Y'))
         if month is None:
@@ -120,7 +120,7 @@ class daytrace:
         for key, value in time_dictionary.iteritems():
             formatted_entry = '%s-%s, %s hour(s), CATEGORY: "%s" MESSAGE: "%s" TICKET: "%s"' % (value['month'], value['day'], value['duration'], value['category'], value['message'], value['ticket'])
             formatted_list.append(formatted_entry)
-        return formatted_list
+        return sorted(formatted_list)
 ################################################################################
 ################################################################################
     def fuzzy_match(self, item_str, category_list):
@@ -134,23 +134,3 @@ class daytrace:
         #return the matching category
         return fuzzy_match[0]
          #Compares the item_str to items in the category_list to see which is the closest match. It returns the closest match.
-    
-###############
-### Methods ###
-###############
-#Time_entry(year, month, day, time, duration, message, category) 
-###Writes output as json file as described in readme
-###Increments entries
-###Assumes date if blank
-#Edit_entry
-###Allows adding or modifying information on an existing time entry
-#Sort_time
-###Sorts and returns time entry based on search.
-###Return time entries for the year
-#####For month
-#####For week
-#####For day
-#####For category
-###Return total time worked for day
-#####For week
-#####For month
