@@ -2,6 +2,7 @@ import datetime
 import json
 import difflib
 import sys
+import importlib
 #from datetime import datetime
 
 class daytrace:
@@ -12,6 +13,8 @@ class daytrace:
 ################################################################################
 ################################################################################
     def create_entry(self, category, message, duration, ticket=None, year=None, month=None, day=None, hour=None, minute=None):
+        # Checks if specific time was passed, if not, creates entry at the time
+        # of creating the entry
         if year is None:
             year = int(self.date_time.strftime('%Y'))
         if month is None:
@@ -24,7 +27,9 @@ class daytrace:
             minute = int(self.date_time.strftime('%M'))
         duration = float(duration)
 
-        # Creating the entry_key variable just to make naming the dictionary keys easier. Also appended dentries to the dictionary opposed to declaring them all at once for readability purposes.
+        # Creating the entry_key variable just to make naming the dictionary
+        # keys easier. Also appended dentries to the dictionary opposed to
+        # declaring them all at once for readability purposes.
         self.entry_key = self.date_time.strftime('%Y%m%d%H%M%S')
         time_entry = { self.entry_key: {}}
         time_entry[self.entry_key]['category'] = category
@@ -45,11 +50,13 @@ class daytrace:
         if json_path is None:
             json_path="./my_time.json"
 
-        #Opens the json file of time entries as a python file obj. Converts the json file obj to a python dictionary.
+        #Opens the json file of time entries as a python file obj. Converts the
+        #json file obj to a python dictionary.
         with open(json_path, 'r') as jfile:
             time_card = json.load(jfile)
 
-        #Updates the python dictionary and appends the entry to the dictionary. Converts the dictionary back to json and overwrites the existing file.
+        #Updates the python dictionary and appends the entry to the dictionary.
+        #Converts the dictionary back to json and overwrites the existing file.
         time_card.update(entry_dict)
         with open(json_path, 'w') as jfile:
             json.dump(time_card, jfile, sort_keys=True, indent=4)
@@ -60,7 +67,8 @@ class daytrace:
         if json_path is None:
             json_path = './my_time.json'
 
-        #Opens the json file of time entries as a python file obj. Converts the json file obj to a python dictionary.
+        #Opens the json file of time entries as a python file obj. Converts the
+        #json file obj to a python dictionary.
         with open(json_path, 'r') as jfile:
             time_card = json.load(jfile)
         time_total=0
@@ -76,9 +84,10 @@ class daytrace:
         if json_path is None:
             json_path = './mytime.json'
 
+        # Open the passed timecard json file
         with open(json_path, 'r') as jfile:
             time_card = json.load(jfile)
-        
+
         def filter(item, item_category):
             filter_items = {}
             if item is not None:
@@ -126,11 +135,46 @@ class daytrace:
     def fuzzy_match(self, item_str, category_list):
         #Category list is an array of values
         fuzzy_match = difflib.get_close_matches(item_str, category_list, 1, 0.7) 
-        #This sees if the array is empty from the fuzzy match. If it is then no matches were found and the program exits
+        #This sees if the array is empty from the fuzzy match. If it is then no
+        #matches were found and the program exits
         if not fuzzy_match:
             print('No category match, try again')
             sys.exit(1)
         #print(fuzzy_match)
         #return the matching category
         return fuzzy_match[0]
-         #Compares the item_str to items in the category_list to see which is the closest match. It returns the closest match.
+        #Compares the item_str to items in the category_list to see which is
+        #the closest match. It returns the closest match.
+################################################################################
+################################################################################
+    def upload(self, ticket_platform, server, message, duration, ticket, user=None, password=None,
+            token=None):
+        # Imports a module from ./lib/platform/ based on what ticket_platform is
+        # passed as an argument. After instantiating the platform
+        # module, code checks what kind of authentication that module uses, and
+        # evokes the uploader method with the appropriate parameters based on
+        # the response.
+        module = importlib.import_module("modules.%s" % (ticket_platform))
+        uploader = module.TimeUpload()
+        if uploader.auth_type == 'basic':
+            uploader.auth(server, user, password)
+            upload_results = uploader.upload(message, duration, ticket)
+        if uploader.auth_type == 'token':
+            upload_results = uploader.upload(server, message, duration, ticket, token)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
