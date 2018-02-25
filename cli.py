@@ -40,11 +40,11 @@ def tsearch(args):
     print(daytracer.tally(sresults))
 
 def tupload(args):
-    platform = config.get('Remote', 'platform') 
-    server = config.get('Remote', 'server') 
-    user = config.get('Remote', 'user') 
-    password = config.get('Remote', 'pass') 
-    token = config.get('Remote', 'token') 
+    platform = config.get('Remote', 'platform')
+    server = config.get('Remote', 'server')
+    user = config.get('Remote', 'user')
+    password = config.get('Remote', 'pass')
+    token = config.get('Remote', 'token')
     with open(args.timecard_file, 'r') as jfile:
         time_card = json.load(jfile)
 
@@ -53,8 +53,6 @@ def tupload(args):
     # to the ticket. Otherwise, upload the entry to the ticket associated with
     # the category.
     for key, value in time_card.iteritems():
-        print(value['duration'])
-        print(value['ticket'])
         if value.get('uploaded') == True:
             pass
         elif value['ticket'] == None:

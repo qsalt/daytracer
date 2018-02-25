@@ -147,8 +147,10 @@ class daytrace:
         #the closest match. It returns the closest match.
 ################################################################################
 ################################################################################
-    def upload(self, ticket_platform, server, message, duration, ticket, user=None, password=None,
-            token=None):
+
+    def upload(self, ticket_platform, server, message, duration, ticket,
+        user=None, password=None, token=None):
+
         # Imports a module from ./lib/platform/ based on what ticket_platform is
         # passed as an argument. After instantiating the platform
         # module, code checks what kind of authentication that module uses, and
