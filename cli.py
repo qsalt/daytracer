@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/python
 import argparse
 import ConfigParser
 import daytrace
@@ -96,6 +96,12 @@ def config_fetch(config_path):
         config.set('Categories', 'admin', 'url/action')
         config.set('Categories', 'development', 'url/action')
         config.set('Categories', 'operations', 'url/action')
+        config.add_section('Remote')
+        config.set('Remote', 'platform', 'upload_jia')
+        config.set('Remote', 'server', 'jira.example.com')
+        config.set('Remote', 'user', 'USERNAME')
+        config.set('Remote', 'pass', 'PASSWORD')
+        config.set('Remote', 'token', 'TOKEN')
         #Configure a bare config file to use. Add/change categories to use when logging time.
         with open(config_path, 'wb') as configfile:
             config.write(configfile)

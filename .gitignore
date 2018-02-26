@@ -1,5 +1,6 @@
 config.cfg
-daytrace.pyc
+*.pyc
+modules/*.pyc
 mytime.json
 Vagrantbox/*
 env/*
