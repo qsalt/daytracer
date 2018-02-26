@@ -27,6 +27,13 @@ daytrace create "awesome category" "I made great progress on that awesome projec
     * Single & Bulk edit: find one or multiple issues and edit a given key value pair.
     * Edit last: If no filter is provided edit key value pairs of latlest entry.
 
+### Remote module extension
+This tool stores ticket system modules in ./lib/platform to handle the
+uploading of time entries to different tracking systems. The requirements for
+modules are they have a upload method, and when initialized, the class contains
+a self.auth variable, which stores the kind of authentication system required
+(basic auth, token, oauth).
+
 ### Config file
 This script looks for a config.cfg file in the directory of the git repo. If it does not exist, a default config file is generated. This config is used to set where your mytime.json file will be saved, and what categories you want to track your time in.
 
@@ -40,6 +47,13 @@ timecard_location = mytime.json
 admin = url/action
 development = url/action
 operations = url/action
+
+[Remote]
+platform = jira
+server = curiositycake.atlassian.net
+user = USERNAME
+pass = PASSWORD
+token = TOKEN
 ```
 
 ### Sample Output:
