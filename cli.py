@@ -48,15 +48,22 @@ def tupload(args):
     with open(args.timecard_file, 'r') as jfile:
         time_card = json.load(jfile)
 
+    auth = daytracer.auth_upload(platform, server, user, password, token)
+
     # First checks if the value has been uploaded already, if so, pass it.
     # Otherwise it checks to see if a ticket is set, if it is, upload the entry
     # to the ticket. Otherwise, upload the entry to the ticket associated with
     # the category.
     for key, value in time_card.iteritems():
+        # Using .get method to return None if key is not present, rather than
+        # erroring
         if value.get('uploaded') == True:
-            pass
+            print('blocked upload, already done')
+            continue
+
         elif value['ticket'] == None:
             category = value['category']
+            # Fetches the ticket assigned to the category in the config.cfg file
             ticket = config.get('Categories', category)
             upload_results = daytracer.upload(platform, server,
                 value['message'], value['duration'], ticket, user,
@@ -66,9 +73,12 @@ def tupload(args):
                 value['message'], value['duration'], value['ticket'], user,
                 password, token)
 
+        # Writes back to time entry to indicated it has been uploaded
         if upload_results == True:
+            print('upload results triggered and uploaded written to databag')
             value['uploaded'] = True
             time_entry = { key: value }
+            daytracer.log_entry(time_entry, output_file)
 
 
 

@@ -24,4 +24,5 @@ class TimeUpload:
         duration = "%sh" % (duration)
         self.jira.add_worklog(issue=ticket, timeSpent=duration, comment=message)
         print("Adding worklog to ticket  %s" % (ticket))
+        return True
 

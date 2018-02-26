@@ -147,22 +147,35 @@ class daytrace:
         #the closest match. It returns the closest match.
 ################################################################################
 ################################################################################
+    def auth_upload(self, ticket_platform, server, user=None, password=None,
+            token=None):
+        # Imports a module from ./lib/platform/ based on what ticket_platform is
+        # passed as an argument. After instantiating the platform
+        # module, code checks what kind of authentication that module uses, and
+        # evokes the auth method needed for the given module. This
+        # authentication child object is stored in the parent object to use
+        # when uploading time entries to the service
+        module = importlib.import_module("modules.%s" % (ticket_platform))
+        self.uploader = module.TimeUpload()
+        if self.uploader.auth_type == 'basic':
+            self.uploader.auth(server, user, password)
+        if self.uploader.auth_type == 'token':
+            self.uploader.auth(server, user, password)
+        return self
 
     def upload(self, ticket_platform, server, message, duration, ticket,
         user=None, password=None, token=None):
 
-        # Imports a module from ./lib/platform/ based on what ticket_platform is
-        # passed as an argument. After instantiating the platform
-        # module, code checks what kind of authentication that module uses, and
-        # evokes the uploader method with the appropriate parameters based on
-        # the response.
-        module = importlib.import_module("modules.%s" % (ticket_platform))
-        uploader = module.TimeUpload()
-        if uploader.auth_type == 'basic':
-            uploader.auth(server, user, password)
-            upload_results = uploader.upload(message, duration, ticket)
-        if uploader.auth_type == 'token':
-            upload_results = uploader.upload(server, message, duration, ticket, token)
+#        module = importlib.import_module("modules.%s" % (ticket_platform))
+#        uploader = module.TimeUpload()
+        if self.uploader.auth_type == 'basic':
+            print('basic')
+            upload_results = self.uploader.upload(message, duration, ticket)
+            return True
+        if self.uploader.auth_type == 'token':
+            print('token')
+            self.upload_results = self.uploader.upload(server, message, duration, ticket, token)
+            return True
 
 
 
