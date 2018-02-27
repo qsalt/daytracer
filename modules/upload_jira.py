@@ -12,7 +12,7 @@ class TimeUpload:
 
     def auth(self, server, user, password):
         ### NOTE: Add a try catch here when uploading. This would be to catch
-        #if the ticket does not exist
+        #if the auth fails
         server = "https://%s" % (server)
         print("Authenticating to %s" % (server))
         self.jira = JIRA(server, basic_auth=(user,password))

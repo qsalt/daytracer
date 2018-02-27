@@ -160,22 +160,17 @@ class daytrace:
         if self.uploader.auth_type == 'basic':
             self.uploader.auth(server, user, password)
         if self.uploader.auth_type == 'token':
-            self.uploader.auth(server, user, password)
+            self.uploader.auth(server, user, token)
         return self
 
     def upload(self, ticket_platform, server, message, duration, ticket,
         user=None, password=None, token=None):
 
-#        module = importlib.import_module("modules.%s" % (ticket_platform))
-#        uploader = module.TimeUpload()
-        if self.uploader.auth_type == 'basic':
-            print('basic')
-            upload_results = self.uploader.upload(message, duration, ticket)
-            return True
-        if self.uploader.auth_type == 'token':
-            print('token')
-            self.upload_results = self.uploader.upload(server, message, duration, ticket, token)
-            return True
+        # Upload results with the imported class from the auth method
+        # NOTE: Should add a try catch here to not error if auth_upload is not
+        # evoked first
+        upload_results = self.uploader.upload(message, duration, ticket)
+        return True
 
 
 
