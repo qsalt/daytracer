@@ -85,3 +85,6 @@ token = TOKEN
 
 }
 ```
+
+### Bugs
+* Bug found in jira library. PR for fix created here: https://github.com/pycontribs/jira/pull/514

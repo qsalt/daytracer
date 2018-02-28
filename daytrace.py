@@ -12,19 +12,22 @@ class daytrace:
         self.date_time = datetime.datetime.today()
 ################################################################################
 ################################################################################
-    def create_entry(self, category, message, duration, ticket=None, year=None, month=None, day=None, hour=None, minute=None):
+    def create_entry(self, category, message, duration, ticket, start_time=None):
         # Checks if specific time was passed, if not, creates entry at the time
         # of creating the entry
-        if year is None:
-            year = int(self.date_time.strftime('%Y'))
-        if month is None:
-            month = int(self.date_time.strftime('%m'))
-        if day is None:
-            day = int(self.date_time.strftime('%d'))
-        if hour is None:
-            hour = int(self.date_time.strftime('%H'))
-        if minute is None:
-            minute = int(self.date_time.strftime('%M'))
+        if start_time is None:
+            start_time = self.date_time
+        else:
+            try:
+                start_time = datetime.datetime.strptime(int(start_time),
+                    '%Y%m%d%H%M%S')
+            except:
+                print('start_time must be in the format of YYYYMMDDhhmmss')
+        year = int(start_time.strftime('%Y'))
+        month = int(start_time.strftime('%m'))
+        day = int(start_time.strftime('%d'))
+        hour = int(start_time.strftime('%H'))
+        minute = int(start_time.strftime('%M'))
         duration = float(duration)
 
         # Creating the entry_key variable just to make naming the dictionary
@@ -41,6 +44,7 @@ class daytrace:
         time_entry[self.entry_key]['day'] = day
         time_entry[self.entry_key]['hour'] = hour
         time_entry[self.entry_key]['minute'] = minute
+        time_entry[self.entry_key]['start_time'] = int(start_time.strftime('%Y%m%d%H%M%S'))
         #entry_json = json.dumps(time_entry, sort_keys=True, indent=4)
 
         return time_entry
@@ -80,40 +84,19 @@ class daytrace:
         return time_total
 ################################################################################
 ################################################################################
-    def search(self, json_path=None, category=None, ticket=None, day=None):
-        if json_path is None:
-            json_path = './mytime.json'
-
-        # Open the passed timecard json file
+    def search(self, json_path=None, search_type=None, search_value=None):
         with open(json_path, 'r') as jfile:
             time_card = json.load(jfile)
+        if search_value == None:
+            return time_card
+        else:
+            filtered_items = {}
+            for key, value in time_card.iteritems():
+                #Checks if category value equals given value
+                if str(value[search_type]).lower() == str(search_value).lower():
+                    filtered_items[key] = value
 
-        def filter(item, item_category):
-            filter_items = {}
-            if item is not None:
-                for key, value in time_card.iteritems():
-                    if value[item_category] is None:
-                        continue
-                    elif type(value[item_category]) is int:
-                        if int(item) is int(value[item_category]):
-                            filter_items[key] = value
-                    elif item.lower() in value[item_category].lower():
-                        filter_items[key] = value
-                        #print(filter_items)
-                return filter_items
-#            return None
-
-        if category is not None:
-            results = filter(category, 'category')
-        if ticket is not None:
-            results = filter(ticket, 'ticket')
-        if day is not None:
-            results = filter(day, 'day')
-        if category is None and ticket is None and day is None:
-            results = time_card
-
-        return results
-#        self.tally(results)
+            return filtered_items
 ################################################################################
 ################################################################################
     def tally(self, time_dictionary):
@@ -164,12 +147,13 @@ class daytrace:
         return self
 
     def upload(self, ticket_platform, server, message, duration, ticket,
-        user=None, password=None, token=None):
+        user=None, password=None, token=None, datetime_obj=None):
 
         # Upload results with the imported class from the auth method
         # NOTE: Should add a try catch here to not error if auth_upload is not
         # evoked first
-        upload_results = self.uploader.upload(message, duration, ticket)
+        upload_results = self.uploader.upload(message, duration, ticket,
+                datetime_obj)
         return True
 
 

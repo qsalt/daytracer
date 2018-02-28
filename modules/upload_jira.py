@@ -1,4 +1,5 @@
 from jira import JIRA
+import datetime
 #server = 'https://curiositycake.atlassian.net'
 #user = ''
 #password = ''
@@ -18,11 +19,14 @@ class TimeUpload:
         self.jira = JIRA(server, basic_auth=(user,password))
         return self
 
-    def upload(self, message, duration, ticket):
+    def upload(self, message, duration, ticket, datetime_obj):
         ### NOTE: Add a try catch here when uploading. This would be to catch
         #if the ticket does not exist
         duration = "%sh" % (duration)
-        self.jira.add_worklog(issue=ticket, timeSpent=duration, comment=message)
+        self.jira.add_worklog(issue=ticket, timeSpent=duration,
+                comment=message,
+                started=datetime_obj)
+#                started=datetime_obj.strftime("%Y-%m-%dT%H:%M:%S.000%z"))
         print("Adding worklog to ticket  %s" % (ticket))
         return True
 
