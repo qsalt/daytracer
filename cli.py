@@ -5,6 +5,7 @@ import daytrace
 import os
 import sys
 import json
+import datetime
 
 daytracer = daytrace.daytrace()
 ###############################################################################
@@ -33,11 +34,23 @@ def ttotal(args):
 
 
 def tsearch(args):
-    sresults = daytracer.search(args.timecard_file, args.category, args.ticket, args.day)
-    formatted = daytracer.formatted(sresults)
+    if args.category is not None:
+        print("category passed is %s" % (args.category))
+        search_results = daytracer.search(args.timecard_file, 'category',
+                args.category)
+    elif args.ticket is not None:
+        search_results = daytracer.search(args.timecard_file, 'ticket',
+                args.ticket)
+    elif args.day is not None:
+        search_results = daytracer.search(args.timecard_file, 'day',
+                args.day)
+    else:
+        search_results = daytracer.search(args.timecard_file)
+
+    formatted = daytracer.formatted(search_results)
     for entry in formatted:
         print(entry)
-    print(daytracer.tally(sresults))
+    print(daytracer.tally(search_results))
 
 def tupload(args):
     platform = config.get('Remote', 'platform')
@@ -55,10 +68,14 @@ def tupload(args):
     # to the ticket. Otherwise, upload the entry to the ticket associated with
     # the category.
     for key, value in time_card.iteritems():
+        # Converting value['start_time'] to datetime object
+        start_time = datetime.datetime.strptime(str(value['start_time']), '%Y%m%d%H%M%S')
+
+        type(start_time)
         # Using .get method to return None if key is not present, rather than
         # erroring
         if value.get('uploaded') == True:
-            print('blocked upload, already done')
+            print("Entry %s has already been uploaded. Skipping." % (key))
             continue
 
         elif value['ticket'] == None:
@@ -67,11 +84,11 @@ def tupload(args):
             ticket = config.get('Categories', category)
             upload_results = daytracer.upload(platform, server,
                 value['message'], value['duration'], ticket, user,
-                password, token)
+                password, token, start_time)
         else:
             upload_results = daytracer.upload(platform, server,
                 value['message'], value['duration'], value['ticket'], user,
-                password, token)
+                password, token, start_time)
 
         # Writes back to time entry to indicated it has been uploaded
         if upload_results == True:
